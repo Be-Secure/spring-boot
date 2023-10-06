@@ -41,6 +41,7 @@ The `spring-boot-starter-test` "`Starter`" (in the `test` `scope`) contains the 
 * https://site.mockito.org/[Mockito]: A Java mocking framework.
 * https://github.com/skyscreamer/JSONassert[JSONassert]: An assertion library for JSON.
 * https://github.com/jayway/JsonPath[JsonPath]: XPath for JSON.
+* https://https://github.com/awaitility/awaitility[Awaitility]: A library for testing asynchronous systems.
 
 We generally find these common libraries to be useful when writing tests.
 If these libraries do not suit your needs, you can add additional test dependencies of your own.
@@ -298,11 +299,6 @@ We recommend using a `@Bean` method to create and configure the mock in this sit
 
 Additionally, you can use `@SpyBean` to wrap any existing bean with a Mockito `spy`.
 See the {spring-boot-test-module-api}/mock/mockito/SpyBean.html[Javadoc] for full details.
-
-NOTE: CGLib proxies, such as those created for scoped beans, declare the proxied methods as `final`.
-This stops Mockito from functioning correctly as it cannot mock or spy on `final` methods in its default configuration.
-If you want to mock or spy on such a bean, configure Mockito to use its inline mock maker by adding `org.mockito:mockito-inline` to your application's test dependencies.
-This allows Mockito to mock and spy on `final` methods.
 
 NOTE: While Spring's test framework caches application contexts between tests and reuses a context for tests sharing the same configuration, the use of `@MockBean` or `@SpyBean` influences the cache key, which will most likely increase the number of contexts.
 
@@ -621,6 +617,22 @@ If you prefer your test to run against a real database, you can use the `@AutoCo
 
 
 
+[[features.testing.spring-boot-applications.autoconfigured-spring-data-r2dbc]]
+==== Auto-configured Data R2DBC Tests
+`@DataR2dbcTest` is similar to `@DataJdbcTest` but is for tests that use Spring Data R2DBC repositories.
+By default, it configures an in-memory embedded database, a `R2dbcEntityTemplate`, and Spring Data R2DBC repositories.
+Regular `@Component` and `@ConfigurationProperties` beans are not scanned when the `@DataR2dbcTest` annotation is used.
+`@EnableConfigurationProperties` can be used to include `@ConfigurationProperties` beans.
+
+TIP: A list of the auto-configurations that are enabled by `@DataR2dbcTest` can be <<test-auto-configuration#appendix.test-auto-configuration,found in the appendix>>.
+
+By default, Data R2DBC tests are not transactional.
+
+If you prefer your test to run against a real database, you can use the `@AutoConfigureTestDatabase` annotation in the same way as for `DataJpaTest`.
+(See "<<features#features.testing.spring-boot-applications.autoconfigured-spring-data-jpa>>".)
+
+
+
 [[features.testing.spring-boot-applications.autoconfigured-jooq]]
 ==== Auto-configured jOOQ Tests
 You can use `@JooqTest` in a similar fashion as `@JdbcTest` but for jOOQ-related tests.
@@ -723,15 +735,21 @@ include::code:server/MyDataLdapTests[]
 [[features.testing.spring-boot-applications.autoconfigured-rest-client]]
 ==== Auto-configured REST Clients
 You can use the `@RestClientTest` annotation to test REST clients.
-By default, it auto-configures Jackson, GSON, and Jsonb support, configures a `RestTemplateBuilder`, and adds support for `MockRestServiceServer`.
+By default, it auto-configures Jackson, GSON, and Jsonb support, configures a `RestTemplateBuilder` and a `RestClient.Builder`, and adds support for `MockRestServiceServer`.
 Regular `@Component` and `@ConfigurationProperties` beans are not scanned when the `@RestClientTest` annotation is used.
 `@EnableConfigurationProperties` can be used to include `@ConfigurationProperties` beans.
 
 TIP: A list of the auto-configuration settings that are enabled by `@RestClientTest` can be <<test-auto-configuration#appendix.test-auto-configuration,found in the appendix>>.
 
-The specific beans that you want to test should be specified by using the `value` or `components` attribute of `@RestClientTest`, as shown in the following example:
+The specific beans that you want to test should be specified by using the `value` or `components` attribute of `@RestClientTest`.
 
-include::code:MyRestClientTests[]
+When using a `RestTemplateBuilder` in the beans under test and `RestTemplateBuilder.rootUri(String rootUri)` has been called when building the `RestTemplate`, then the root URI should be omitted from the `MockRestServiceServer` expectations as shown in the following example:
+
+include::code:MyRestTemplateServiceTests[]
+
+When using a `RestClient.Builder` in the beans under test, or when using a `RestTemplateBuilder` without calling `rootUri(String rootURI)`, the full URI must be used in the `MockRestServiceServer` expectations as shown in the following example:
+
+include::code:MyRestClientServiceTests[]
 
 
 
@@ -976,6 +994,15 @@ The following service connection factories are provided in the `spring-boot-test
 | `Neo4jConnectionDetails`
 | Containers of type `Neo4jContainer`
 
+| `OtlpMetricsConnectionDetails`
+| Containers named "otel/opentelemetry-collector-contrib"
+
+| `OtlpTracingConnectionDetails`
+| Containers named "otel/opentelemetry-collector-contrib"
+
+| `PulsarConnectionDetails`
+| Containers of type `PulsarContainer`
+
 | `R2dbcConnectionDetails`
 | Containers of type `MariaDBContainer`, `MSSQLServerContainer`, `MySQLContainer`, `OracleContainer`, or `PostgreSQLContainer`
 
@@ -1095,7 +1122,7 @@ This is especially useful for Testcontainer `Container` beans, as they keep thei
 
 include::code:MyContainersConfiguration[]
 
-WARNING: If you're using Gradle and want to use this feature, you need to change the configuration of the `spring-boot-devtools` dependency from `developmentOnly` to `testImplementation`.
+WARNING: If you're using Gradle and want to use this feature, you need to change the configuration of the `spring-boot-devtools` dependency from `developmentOnly` to `testAndDevelopmentOnly`.
 With the default scope of `developmentOnly`, the `bootTestRun` task will not pick up changes in your code, as the devtools are not active.
 
 

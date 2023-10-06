@@ -28,6 +28,7 @@ import org.springframework.boot.autoconfigure.r2dbc.R2dbcConnectionDetails;
 import org.springframework.boot.docker.compose.service.connection.test.AbstractDockerComposeIntegrationTests;
 import org.springframework.boot.jdbc.DatabaseDriver;
 import org.springframework.boot.testsupport.junit.DisabledOnOs;
+import org.springframework.boot.testsupport.testcontainers.DockerImageNames;
 import org.springframework.r2dbc.core.DatabaseClient;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -42,7 +43,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class OracleR2dbcDockerComposeConnectionDetailsFactoryIntegrationTests extends AbstractDockerComposeIntegrationTests {
 
 	OracleR2dbcDockerComposeConnectionDetailsFactoryIntegrationTests() {
-		super("oracle-compose.yaml");
+		super("oracle-compose.yaml", DockerImageNames.oracleXe());
 	}
 
 	@Test
@@ -50,8 +51,9 @@ class OracleR2dbcDockerComposeConnectionDetailsFactoryIntegrationTests extends A
 		R2dbcConnectionDetails connectionDetails = run(R2dbcConnectionDetails.class);
 		ConnectionFactoryOptions connectionFactoryOptions = connectionDetails.getConnectionFactoryOptions();
 		assertThat(connectionFactoryOptions.toString()).contains("database=xepdb1", "driver=oracle",
-				"password=REDACTED", "user=system");
-		assertThat(connectionFactoryOptions.getRequiredValue(ConnectionFactoryOptions.PASSWORD)).isEqualTo("secret");
+				"password=REDACTED", "user=app_user");
+		assertThat(connectionFactoryOptions.getRequiredValue(ConnectionFactoryOptions.PASSWORD))
+			.isEqualTo("app_user_secret");
 		Awaitility.await().atMost(Duration.ofMinutes(1)).ignoreExceptions().untilAsserted(() -> {
 			Object result = DatabaseClient.create(ConnectionFactories.get(connectionFactoryOptions))
 				.sql(DatabaseDriver.ORACLE.getValidationQuery())

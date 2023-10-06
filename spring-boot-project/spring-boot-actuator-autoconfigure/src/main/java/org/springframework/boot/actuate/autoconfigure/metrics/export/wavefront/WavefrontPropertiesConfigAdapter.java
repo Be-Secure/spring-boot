@@ -1,5 +1,5 @@
 /*
- * Copyright 2012-2022 the original author or authors.
+ * Copyright 2012-2023 the original author or authors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 
 package org.springframework.boot.actuate.autoconfigure.metrics.export.wavefront;
 
+import com.wavefront.sdk.common.clients.service.token.TokenService.Type;
 import io.micrometer.wavefront.WavefrontConfig;
 
 import org.springframework.boot.actuate.autoconfigure.metrics.export.properties.PushRegistryPropertiesConfigAdapter;
 import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties;
 import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties.Metrics.Export;
+import org.springframework.boot.actuate.autoconfigure.wavefront.WavefrontProperties.TokenType;
 
 /**
  * Adapter to convert {@link WavefrontProperties} to a {@link WavefrontConfig}.
@@ -67,6 +69,35 @@ public class WavefrontPropertiesConfigAdapter
 	@Override
 	public String globalPrefix() {
 		return get(Export::getGlobalPrefix, WavefrontConfig.super::globalPrefix);
+	}
+
+	@Override
+	public boolean reportMinuteDistribution() {
+		return get(Export::isReportMinuteDistribution, WavefrontConfig.super::reportMinuteDistribution);
+	}
+
+	@Override
+	public boolean reportHourDistribution() {
+		return get(Export::isReportHourDistribution, WavefrontConfig.super::reportHourDistribution);
+	}
+
+	@Override
+	public boolean reportDayDistribution() {
+		return get(Export::isReportDayDistribution, WavefrontConfig.super::reportDayDistribution);
+	}
+
+	@Override
+	public Type apiTokenType() {
+		TokenType apiTokenType = this.properties.getApiTokenType();
+		if (apiTokenType == null) {
+			return WavefrontConfig.super.apiTokenType();
+		}
+		return switch (apiTokenType) {
+			case NO_TOKEN -> Type.NO_TOKEN;
+			case WAVEFRONT_API_TOKEN -> Type.WAVEFRONT_API_TOKEN;
+			case CSP_API_TOKEN -> Type.CSP_API_TOKEN;
+			case CSP_CLIENT_CREDENTIALS -> Type.CSP_CLIENT_CREDENTIALS;
+		};
 	}
 
 }

@@ -7,7 +7,7 @@ permissions:
 jobs:
   build:
     name: Build pull request
-    runs-on: ubuntu-latest
+    runs-on: ubuntu22-8-32
     if: ${{ github.repository == 'spring-projects/spring-boot' }}
     steps:
       - name: Set up JDK 17
@@ -17,13 +17,13 @@ jobs:
           distribution: 'liberica'
 
       - name: Check out code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Validate Gradle wrapper
         uses: gradle/wrapper-validation-action@v1
 
       - name: Set up Gradle
-        uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25
+        uses: gradle/gradle-build-action@842c587ad8aa4c68eeba24c396e15af4c2e9f30a
 
       - name: Build
         env:
@@ -37,6 +37,7 @@ jobs:
 
       - name: Upload build reports
         uses: actions/upload-artifact@v3
+        if: failure()
         with:
           name: build-reports
           path: '**/build/reports/'

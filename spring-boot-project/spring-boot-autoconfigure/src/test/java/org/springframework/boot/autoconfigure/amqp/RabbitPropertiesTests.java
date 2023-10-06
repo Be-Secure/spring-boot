@@ -16,6 +16,7 @@
 
 package org.springframework.boot.autoconfigure.amqp;
 
+import com.rabbitmq.client.ConnectionFactory;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.amqp.rabbit.config.DirectRabbitListenerContainerFactory;
@@ -282,6 +283,13 @@ class RabbitPropertiesTests {
 	}
 
 	@Test
+	void determineAddressesUsesIpv6HostAndPortPropertiesWhenNoAddressesSet() {
+		this.properties.setHost("[::1]");
+		this.properties.setPort(32863);
+		assertThat(this.properties.determineAddresses()).isEqualTo("[::1]:32863");
+	}
+
+	@Test
 	void determineSslUsingAmqpsReturnsStateOfFirstAddress() {
 		this.properties.setAddresses("amqps://root:password@otherhost,amqp://root:password2@otherhost2");
 		assertThat(this.properties.getSsl().determineEnabled()).isTrue();
@@ -314,6 +322,13 @@ class RabbitPropertiesTests {
 	}
 
 	@Test
+	void propertiesUseConsistentDefaultValues() {
+		ConnectionFactory connectionFactory = new ConnectionFactory();
+		assertThat(connectionFactory).hasFieldOrPropertyWithValue("maxInboundMessageBodySize",
+				(int) this.properties.getMaxInboundMessageBodySize().toBytes());
+	}
+
+	@Test
 	void simpleContainerUseConsistentDefaultValues() {
 		SimpleRabbitListenerContainerFactory factory = new SimpleRabbitListenerContainerFactory();
 		SimpleMessageListenerContainer container = factory.createListenerContainer();
@@ -322,6 +337,7 @@ class RabbitPropertiesTests {
 		assertThat(container).hasFieldOrPropertyWithValue("missingQueuesFatal", simple.isMissingQueuesFatal());
 		assertThat(container).hasFieldOrPropertyWithValue("deBatchingEnabled", simple.isDeBatchingEnabled());
 		assertThat(container).hasFieldOrPropertyWithValue("consumerBatchEnabled", simple.isConsumerBatchEnabled());
+		assertThat(container).hasFieldOrPropertyWithValue("forceStop", simple.isForceStop());
 	}
 
 	@Test
@@ -332,6 +348,7 @@ class RabbitPropertiesTests {
 		assertThat(direct.isAutoStartup()).isEqualTo(container.isAutoStartup());
 		assertThat(container).hasFieldOrPropertyWithValue("missingQueuesFatal", direct.isMissingQueuesFatal());
 		assertThat(container).hasFieldOrPropertyWithValue("deBatchingEnabled", direct.isDeBatchingEnabled());
+		assertThat(container).hasFieldOrPropertyWithValue("forceStop", direct.isForceStop());
 	}
 
 	@Test

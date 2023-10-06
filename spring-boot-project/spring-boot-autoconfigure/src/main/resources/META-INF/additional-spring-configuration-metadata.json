@@ -1572,6 +1572,18 @@
       "defaultValue": "servlet"
     },
     {
+      "name": "spring.jms.listener.session.acknowledge-mode",
+      "defaultValue": "auto"
+    },
+    {
+      "name": "spring.jms.template.session.acknowledge-mode",
+      "defaultValue": "auto"
+    },
+    {
+      "name": "spring.jmx.registration-policy",
+      "defaultValue": "fail-on-existing"
+    },
+    {
       "name": "spring.jpa.hibernate.use-new-id-generator-mappings",
       "type": "java.lang.Boolean",
       "description": "Whether to use Hibernate's newer IdentifierGenerator for AUTO, TABLE and SEQUENCE. This is actually a shortcut for the \"hibernate.id.new_generator_mappings\" property. When not specified will default to \"true\".",
@@ -1583,167 +1595,6 @@
     {
       "name": "spring.jpa.open-in-view",
       "defaultValue": true
-    },
-    {
-      "name": "spring.jta.bitronix.properties.allow-multiple-lrc",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.asynchronous2-pc",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.background-recovery-interval",
-      "type": "java.lang.Integer",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.background-recovery-interval-seconds",
-      "type": "java.lang.Integer",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.current-node-only-recovery",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.debug-zero-resource-transaction",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.default-transaction-timeout",
-      "type": "java.lang.Integer",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.disable-jmx",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.exception-analyzer",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.filter-log-status",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.force-batching-enabled",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.forced-write-enabled",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.graceful-shutdown-interval",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.jndi-transaction-synchronization-registry-name",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.jndi-user-transaction-name",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.journal",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.log-part1-filename",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.log-part2-filename",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.max-log-size-in-mb",
-      "type": "java.lang.Integer",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.resource-configuration-filename",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.server-id",
-      "type": "java.lang.String",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.skip-corrupted-logs",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
-    },
-    {
-      "name": "spring.jta.bitronix.properties.warn-about-zero-resource-transaction",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "level": "error"
-      }
     },
     {
       "name": "spring.jta.enabled",
@@ -2165,6 +2016,18 @@
       "defaultValue": "bolt://localhost:7687"
     },
     {
+      "name": "spring.pulsar.function.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether to enable function support.",
+      "defaultValue": true
+    },
+    {
+      "name": "spring.pulsar.producer.cache.enabled",
+      "type": "java.lang.Boolean",
+      "description": "Whether to enable caching in the PulsarProducerFactory.",
+      "defaultValue": true
+    },
+    {
       "name": "spring.quartz.jdbc.comment-prefix",
       "defaultValue": [
         "#",
@@ -2226,6 +2089,10 @@
         "replacement": "spring.rabbitmq.template.default-receive-queue",
         "level": "error"
       }
+    },
+    {
+      "name": "spring.reactor.context-propagation",
+      "defaultValue": "limited"
     },
     {
       "name": "spring.reactor.stacktrace-mode.enabled",
@@ -2900,6 +2767,14 @@
       "defaultValue": false
     },
     {
+      "name": "spring.webflux.multipart.streaming",
+      "type": "java.lang.Boolean",
+      "deprecation": {
+        "reason": "Replaced by the PartEventHttpMessageReader and the PartEvent API.",
+        "level": "error"
+      }
+    },
+    {
       "name": "spring.webservices.wsdl-locations",
       "type": "java.util.List<java.lang.String>",
       "description": "Comma-separated list of locations of WSDLs and accompanying XSDs to be exposed as beans."
@@ -3135,10 +3010,6 @@
           "name": "any"
         }
       ]
-    },
-    {
-      "name": "spring.jmx.registration-policy",
-      "defaultValue": "fail-on-existing"
     },
     {
       "name": "spring.jmx.server",
@@ -3443,14 +3314,6 @@
           "name": "any"
         }
       ]
-    },
-    {
-      "name": "spring.webflux.multipart.streaming",
-      "type": "java.lang.Boolean",
-      "deprecation": {
-        "reason": "Replaced by the PartEventHttpMessageReader and the PartEvent API.",
-        "level": "error"
-      }
     }
   ]
 }
