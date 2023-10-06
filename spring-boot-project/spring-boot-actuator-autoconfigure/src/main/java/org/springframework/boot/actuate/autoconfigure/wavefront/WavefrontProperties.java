@@ -58,6 +58,11 @@ public class WavefrontProperties {
 	private String apiToken;
 
 	/**
+	 * Type of the API token.
+	 */
+	private TokenType apiTokenType;
+
+	/**
 	 * Application configuration.
 	 */
 	private final Application application = new Application();
@@ -165,6 +170,14 @@ public class WavefrontProperties {
 
 	public void setTraceDerivedCustomTagKeys(Set<String> traceDerivedCustomTagKeys) {
 		this.traceDerivedCustomTagKeys = traceDerivedCustomTagKeys;
+	}
+
+	public TokenType getApiTokenType() {
+		return this.apiTokenType;
+	}
+
+	public void setApiTokenType(TokenType apiTokenType) {
+		this.apiTokenType = apiTokenType;
 	}
 
 	public static class Application {
@@ -318,6 +331,21 @@ public class WavefrontProperties {
 			 */
 			private String globalPrefix;
 
+			/**
+			 * Whether to report histogram distributions aggregated into minute intervals.
+			 */
+			private boolean reportMinuteDistribution = true;
+
+			/**
+			 * Whether to report histogram distributions aggregated into hour intervals.
+			 */
+			private boolean reportHourDistribution;
+
+			/**
+			 * Whether to report histogram distributions aggregated into day intervals.
+			 */
+			private boolean reportDayDistribution;
+
 			public String getGlobalPrefix() {
 				return this.globalPrefix;
 			}
@@ -342,7 +370,57 @@ public class WavefrontProperties {
 				throw new UnsupportedOperationException("Use Sender.setBatchSize(int) instead");
 			}
 
+			public boolean isReportMinuteDistribution() {
+				return this.reportMinuteDistribution;
+			}
+
+			public void setReportMinuteDistribution(boolean reportMinuteDistribution) {
+				this.reportMinuteDistribution = reportMinuteDistribution;
+			}
+
+			public boolean isReportHourDistribution() {
+				return this.reportHourDistribution;
+			}
+
+			public void setReportHourDistribution(boolean reportHourDistribution) {
+				this.reportHourDistribution = reportHourDistribution;
+			}
+
+			public boolean isReportDayDistribution() {
+				return this.reportDayDistribution;
+			}
+
+			public void setReportDayDistribution(boolean reportDayDistribution) {
+				this.reportDayDistribution = reportDayDistribution;
+			}
+
 		}
+
+	}
+
+	/**
+	 * Wavefront token type.
+	 *
+	 * @since 3.2.0
+	 */
+	public enum TokenType {
+
+		/**
+		 * No token.
+		 */
+		NO_TOKEN,
+		/**
+		 * Wavefront API token.
+		 */
+		WAVEFRONT_API_TOKEN,
+		/**
+		 * CSP API token.
+		 */
+		CSP_API_TOKEN,
+		/**
+		 * CSP client credentials.
+		 */
+		CSP_CLIENT_CREDENTIALS
 
 	}
 

@@ -24,7 +24,7 @@ import org.testcontainers.utility.DockerImageName;
  * @author Stephane Nicoll
  * @author Eddú Meléndez
  * @author Moritz Halbritter
- * @since 2.3.6
+ * @author Chris Bono
  */
 public final class DockerImageNames {
 
@@ -36,13 +36,23 @@ public final class DockerImageNames {
 
 	private static final String ELASTICSEARCH_VERSION = "7.17.5";
 
+	private static final String ELASTICSEARCH_8_VERSION = "8.6.1";
+
 	private static final String KAFKA_VERSION = "7.4.0";
 
+	private static final String MARIADB_VERSION = "10.10";
+
 	private static final String MONGO_VERSION = "5.0.17";
+
+	private static final String MYSQL_VERSION = "8.0";
 
 	private static final String NEO4J_VERSION = "4.4.11";
 
 	private static final String ORACLE_XE_VERSION = "18.4.0-slim";
+
+	private static final String OPENTELEMETRY_VERSION = "0.75.0";
+
+	private static final String PULSAR_VERSION = "3.1.0";
 
 	private static final String POSTGRESQL_VERSION = "14.0";
 
@@ -84,11 +94,19 @@ public final class DockerImageNames {
 	}
 
 	/**
-	 * Return a {@link DockerImageName} suitable for running Elasticsearch.
+	 * Return a {@link DockerImageName} suitable for running Elasticsearch 7.
 	 * @return a docker image name for running elasticsearch
 	 */
 	public static DockerImageName elasticsearch() {
 		return DockerImageName.parse("docker.elastic.co/elasticsearch/elasticsearch").withTag(ELASTICSEARCH_VERSION);
+	}
+
+	/**
+	 * Return a {@link DockerImageName} suitable for running Elasticsearch 8.
+	 * @return a docker image name for running elasticsearch
+	 */
+	public static DockerImageName elasticsearch8() {
+		return DockerImageName.parse("elasticsearch").withTag(ELASTICSEARCH_8_VERSION);
 	}
 
 	/**
@@ -100,11 +118,27 @@ public final class DockerImageNames {
 	}
 
 	/**
+	 * Return a {@link DockerImageName} suitable for running MariaDB.
+	 * @return a docker image name for running MariaDB
+	 */
+	public static DockerImageName mariadb() {
+		return DockerImageName.parse("mariadb").withTag(MARIADB_VERSION);
+	}
+
+	/**
 	 * Return a {@link DockerImageName} suitable for running Mongo.
 	 * @return a docker image name for running mongo
 	 */
 	public static DockerImageName mongo() {
 		return DockerImageName.parse("mongo").withTag(MONGO_VERSION);
+	}
+
+	/**
+	 * Return a {@link DockerImageName} suitable for running MySQL.
+	 * @return a docker image name for running MySQL
+	 */
+	public static DockerImageName mysql() {
+		return DockerImageName.parse("mysql").withTag(MYSQL_VERSION);
 	}
 
 	/**
@@ -124,6 +158,22 @@ public final class DockerImageNames {
 	}
 
 	/**
+	 * Return a {@link DockerImageName} suitable for running the Oracle database.
+	 * @return a docker image name for running the Oracle database
+	 */
+	public static DockerImageName opentelemetry() {
+		return DockerImageName.parse("otel/opentelemetry-collector-contrib").withTag(OPENTELEMETRY_VERSION);
+	}
+
+	/**
+	 * Return a {@link DockerImageName} suitable for running Apache Pulsar.
+	 * @return a docker image name for running pulsar
+	 */
+	public static DockerImageName pulsar() {
+		return DockerImageName.parse("apachepulsar/pulsar").withTag(PULSAR_VERSION);
+	}
+
+	/**
 	 * Return a {@link DockerImageName} suitable for running PostgreSQL.
 	 * @return a docker image name for running postgresql
 	 */
@@ -133,7 +183,7 @@ public final class DockerImageNames {
 
 	/**
 	 * Return a {@link DockerImageName} suitable for running RabbitMQ.
-	 * @return a docker image name for running redis
+	 * @return a docker image name for running RabbitMQ
 	 */
 	public static DockerImageName rabbit() {
 		return DockerImageName.parse("rabbitmq").withTag(RABBIT_VERSION);
@@ -158,9 +208,16 @@ public final class DockerImageNames {
 	}
 
 	/**
+	 * Return a {@link DockerImageName} suitable for running Microsoft SQLServer.
+	 * @return a docker image name for running SQLServer
+	 */
+	public static DockerImageName sqlserver() {
+		return DockerImageName.parse("mcr.microsoft.com/mssql/server");
+	}
+
+	/**
 	 * Return a {@link DockerImageName} suitable for running a Docker registry.
 	 * @return a docker image name for running a registry
-	 * @since 2.4.0
 	 */
 	public static DockerImageName registry() {
 		return DockerImageName.parse("registry").withTag(REGISTRY_VERSION);
@@ -169,7 +226,6 @@ public final class DockerImageNames {
 	/**
 	 * Return a {@link DockerImageName} suitable for running Zipkin.
 	 * @return a docker image name for running Zipkin
-	 * @since 3.1.0
 	 */
 	public static DockerImageName zipkin() {
 		return DockerImageName.parse("openzipkin/zipkin").withTag(ZIPKIN_VERSION);
